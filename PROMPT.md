@@ -1,6 +1,18 @@
 # Starter prompt: build a personal investment dashboard with real data
 
-Use this prompt in a ChatGPT conversation where you have deliberately connected your own financial-data sources. Adapt it to the connectors and permissions actually available in your environment.
+Use this prompt in a ChatGPT conversation **after connecting Monarch MCP to ChatGPT** and authorizing the financial accounts you want included. Monarch MCP should be the primary aggregation source for the household dashboard. You may add other institution-specific MCP connections or carefully prepared manual data to fill gaps in Monarch's coverage.
+
+## Before you run this prompt: connect Monarch MCP
+
+1. In ChatGPT, open the available apps/connectors and connect **Monarch MCP** (the Monarch connection).
+2. Complete Monarch's authorization flow and select/authorize the accounts you want the dashboard to include.
+3. Start or continue a ChatGPT conversation in which the Monarch MCP tools are available.
+4. Ask ChatGPT to verify that it can see the Monarch MCP connection and inspect its available read operations before beginning the data pull.
+5. Do not paste Monarch credentials, passwords, one-time codes, or access tokens into chat.
+
+If Monarch MCP is not connected or its tools are not available in the current conversation, stop and tell me that the connection is missing. Do not pretend to have retrieved Monarch data, and do not substitute invented or guessed account information.
+
+The public `index.html` demo in this repository is separate: it is a static interface example that uses fictional data only. Connecting Monarch MCP is for building your own private dashboard with your own authorized data; it does not connect or change the public demo.
 
 ---
 
@@ -8,7 +20,9 @@ Act as a careful portfolio-data engineer and dashboard developer. Help me build 
 
 ## 1. Data access and operating boundaries
 
-- First inventory the connected tools, their available read operations, and the kinds of information they can return.
+- First verify that **Monarch MCP is connected and available in this ChatGPT conversation**. Treat it as the primary household aggregation source. If it is unavailable, stop and ask me to connect it rather than proceeding as though data was retrieved.
+- Inventory Monarch MCP's available read tools and schemas before calling them. Determine whether they expose account inventory, current account balances, holdings/positions, and transaction or historical data; use only operations that actually exist.
+- Retrieve the account inventory and current balances through Monarch MCP first. Retrieve holdings and transaction/history details through Monarch MCP wherever those read operations are available. Record any coverage gaps explicitly.
 - Use only sources I have explicitly connected or files I provide. Do not assume an institution is connected merely because it is named.
 - Prefer read-only retrieval. Do not initiate transfers, trades, bill payments, account changes, or any other financial write action.
 - Never ask me to provide passwords, one-time codes, private keys, or API tokens in chat.
@@ -30,9 +44,9 @@ For each account, preserve the institution, account name, account type, owner/re
 
 ## 3. Combine connectors carefully
 
-A single aggregator may not expose all account details. Where a source is incomplete:
+Use **Monarch MCP as the default primary source** for household accounts and balances. A single aggregator may not expose all account details. Where Monarch MCP is incomplete:
 - Identify the specific missing fields.
-- Check whether another already-authorized connector can supply them.
+- Check whether another already-authorized institution-specific MCP connector can supply them; use it to supplement Monarch MCP, not to duplicate the same underlying account.
 - Use a manual statement/export only when I provide it or explicitly authorize its use.
 - Preserve provenance for every value so I can distinguish institution-reported, aggregator-reported, manually entered, and calculated data.
 - Detect overlapping accounts across sources and prevent duplicates. Do not add two feeds for the same underlying account.
